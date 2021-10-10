@@ -1,0 +1,59 @@
+##) make dummy post 
+=>php artisan make:factory postFactory
+##) post factory
+<?php
+
+/** @var \Illuminate\Database\Eloquent\Factory $factory */
+
+use App\Model;
+use App\Post;
+use App\User;
+use Faker\Generator as Faker;
+
+$factory->define(Post::class, function (Faker $faker) {
+    return [
+        'user_id' => factory(User::class)->create()->id,
+        'title'=> $faker->sentence,
+        'description' => $faker->sentence
+    ];
+});
+
+##) sun dummy factory using command
+1/ php artisan tinker
+
+2.factory(App\Post::class,20)->create()
+// demo data created into user and post table
+
+##) php artisan make:model comment -m
+
+##) php artisan make:factory commentFactory
+// this factory created for dummy data
+
+
+comment factory
+<?php
+
+/** @var \Illuminate\Database\Eloquent\Factory $factory */
+
+use App\Comment;
+use App\Model;
+use App\Post;
+use App\User;
+use Faker\Generator as Faker;
+
+$factory->define(Comment::class, function (Faker $faker) {
+    return [
+        'user_id' => factory(User::class)->create()->id,
+        'post_id' =>factory(Post::class)->create()->id,
+        'body' => $faker->sentence
+    ];
+});
+
+
+
+php artisan tinker
+$posts = factory(App\Post::class,25)->create()
+
+>>> foreach($posts as $post){
+... factory(App\Comment::class,5)->create(['post_id'=>$post->id]);
+... }
