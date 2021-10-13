@@ -1,0 +1,66 @@
+1. first we create weo factory in POSTs and Reivew that stay in Database =>factories => ProductFactory.php & ReviewFactory.php
+
+2.ProductFactory.php
+<?php
+
+/** @var \Illuminate\Database\Eloquent\Factory $factory */
+
+use App\Model\Product;
+use Faker\Generator as Faker;
+
+$factory->define(Product::class, function (Faker $faker) {
+    return [
+        'name' => $faker->word,
+        'details' => $faker->paragraph,
+        'price' => $faker->numberBetween(100,1000),
+        'stock' => $faker->randomDigit,
+        'discount' => $faker->numberBetween(2,30)
+    ];
+});
+
+
+3. ReviewFactory.php
+
+<?php
+
+/** @var \Illuminate\Database\Eloquent\Factory $factory */
+
+use App\Model\Review;
+use App\Model\Product;
+use Faker\Generator as Faker;
+
+$factory->define(Review::class, function (Faker $faker) {
+    return [
+        'product_id' => function(){
+            return Product::all()->random();
+        },
+        'customer' => $faker->name,
+        'review' => $faker->paragraph,
+        'star' => $faker->numberBetween(1,5),
+    ];
+});
+
+4. then write code in seed that located Database => Seeds =>DatabaseSeeder.php
+<?php
+
+use Illuminate\Database\Seeder;
+
+class DatabaseSeeder extends Seeder
+{
+    /**
+     * Seed the application's database.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        // $this->call(UsersTableSeeder::class);
+
+        factory(App\Model\Product::class,30)->create();
+        factory(App\Model\Review::class,300)->create();
+    }
+}
+
+
+then write command
+php artisan db:seed
